@@ -4,6 +4,13 @@
 ### Project Start: 2022.02.02
 
 
+## Quick Start
+
+    roslaunch cmm ridgeback_iiwa_gazebo.launch 
+    roslaunch ridgeback_iiwa_manipulation mobile_manipulation_interactive_demo.launch
+    roslaunch darknet_ros yolo_v3.launch 
+
+
 
 
 ### links 
@@ -16,3 +23,7 @@ Object Detection cpp:
 
 RGBD Camera:
     https://www.stereolabs.com/docs/ros/depth-sensing/
+
+
+Gazebo person 
+    - walking robot: http://gazebosim.org/tutorials?tut=actor&cat=build_robot
