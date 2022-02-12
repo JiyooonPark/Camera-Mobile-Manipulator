@@ -3,7 +3,7 @@
   <arg name="paused" default="false"/>
   <arg name="use_sim_time" default="true"/>
   <arg name="joystick" default="false" />
-  <arg name="world_name" default="$(find cmm)/worlds/cafe.world" />
+  <arg name="world_name" default="$(find cmm_gazebo)/worlds/cafe.world" />
 
   <rosparam file="$(find ridgeback_iiwa_gazebo)/config/gazebo_controller.yaml" command="load"/>
 
@@ -29,5 +29,8 @@
   <include file="$(find ridgeback_iiwa_gazebo)/launch/ridgeback_iiwa_controller.launch">
     <arg name="joystick" value="$(arg joystick)" />
   </include>
+
+  <!-- make robot go to init pose -->
+  <!--node name="iiwa_init_pose" pkg="cmm_iiwa" type="init_pose" respawn="false" output="screen"/-->
 
 </launch>

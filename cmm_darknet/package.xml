@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>cmm_darknet</name>
+  <version>0.0.0</version>
+  <description>The cmm_darknet package</description>
+  <license>BSD</license>
+
+  <maintainer email="jypark.jiyoon@gmail.com">Jiyoon Park</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>boost</depend>
+  <depend>libopencv-dev</depend>
+  <depend>libx11</depend>
+  <depend>libxt-dev</depend>
+  <depend>libxext</depend>
+
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+  <depend>image_transport</depend>
+  <depend>cv_bridge</depend>
+  <depend>sensor_msgs</depend>
+  <depend>message_generation</depend>
+  <depend>darknet_ros_msgs</depend>
+  <depend>actionlib</depend>
+  <depend>nodelet</depend>
+
+  <!-- Test dependencies -->
+  <test_depend>rostest</test_depend>
+  <test_depend>wget</test_depend>
+</package>

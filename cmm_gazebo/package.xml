@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>cmm_gazebo</name>
+  <version>0.0.0</version>
+  <description>The ridgeback_iiwa_gazebo package</description>
+
+  <maintainer email="jypark.jiyoon0@gmail.com">Jiyoon Park</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>iiwa_description</exec_depend>
+  <exec_depend>ridgeback_description</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+
+  <export>
+    <gazebo_ros                                                                 
+        gazebo_model_path="${ROS_PACKAGE_PATH}/" /> 
+  </export>
+
+</package>
