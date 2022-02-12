@@ -2,6 +2,10 @@
   <!-- Arguments -->
   <arg name="open_rviz" default="true"/>
 
+  <!-- Move to inito pose -->
+  <node name="iiwa_init_pose" pkg="cmm_iiwa" type="init_pose" respawn="false" output="screen">
+  </node>
+
   <!-- Run MoveIt! -->
   <include file="$(find ridgeback_iiwa_moveit)/launch/move_group.launch" />
 

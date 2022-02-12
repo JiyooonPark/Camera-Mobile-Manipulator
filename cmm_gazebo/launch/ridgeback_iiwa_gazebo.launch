@@ -30,7 +30,4 @@
     <arg name="joystick" value="$(arg joystick)" />
   </include>
 
-  <!-- make robot go to init pose -->
-  <!--node name="iiwa_init_pose" pkg="cmm_iiwa" type="init_pose" respawn="false" output="screen"/-->
-
 </launch>
