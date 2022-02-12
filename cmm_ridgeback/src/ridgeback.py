@@ -5,7 +5,6 @@ import math, time
 import numpy as np
 from geometry_msgs.msg import PoseArray, Point, Quaternion, Pose, Twist
 from std_msgs.msg import *
-# from trajectory_script_algorithm import *
 
 class Ridgeback:
 
@@ -77,11 +76,9 @@ class Ridgeback:
         self.move_relative(float(r_goal[0][0]), float(r_goal[1][0]), duration=10)
 
     def move_relative(self, x, y, duration=5):
+        
         print("moving to :", x, y)
         publisher = rospy.Publisher('cmd_vel', Twist, queue_size=1)
-        # x=2
-        # y=1
-        # duration=4
 
         cmd = Twist()
         cmd.linear.x = x/duration
