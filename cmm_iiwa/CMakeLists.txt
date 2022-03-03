@@ -19,3 +19,19 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_executable(init_pose src/init_pose.cpp)
 add_dependencies(init_pose iiwa_msgs_generate_messages_cpp)
 target_link_libraries(init_pose ${catkin_LIBRARIES})
+
+add_executable(traj1 src/traj1.cpp)
+add_dependencies(traj1 iiwa_msgs_generate_messages_cpp)
+target_link_libraries(traj1 ${catkin_LIBRARIES})
+
+add_executable(updown src/updown_moveit.cpp)
+add_dependencies(updown iiwa_msgs_generate_messages_cpp)
+target_link_libraries(updown ${catkin_LIBRARIES})
+
+add_executable(end_effector src/end_effector.cpp)
+add_dependencies(end_effector iiwa_msgs_generate_messages_cpp)
+target_link_libraries(end_effector ${catkin_LIBRARIES})
+
+add_executable(filming_methods src/filming_methods.cpp)
+add_dependencies(filming_methods iiwa_msgs_generate_messages_cpp)
+target_link_libraries(filming_methods ${catkin_LIBRARIES})

@@ -29,17 +29,6 @@ static const std::string REFERENCE_FRAME = "arm_mount_link";
 
 bool sim;
 
-vector<string> split(string input, char delimiter){
-    vector<string> ans;
-    stringstream str(input);
-    string temp;
-    
-    while(getline(str, temp, delimiter)){
-        ans.push_back(temp);
-    }
-    
-    return ans;
-}
 
 int main (int argc, char **argv) {
     // Initialize ROS
@@ -54,10 +43,6 @@ int main (int argc, char **argv) {
     std::string movegroup_name, ee_link, planner_id, reference_frame;
     geometry_msgs::PoseStamped init_pose, current_cartesian_position, command_cartesian_position, start, end;
     std::string joint_position_topic, cartesian_position_topic;
-    std::vector<geometry_msgs::Pose> drawing_stroke;
-    std::vector<geometry_msgs::Pose> linear_path;
-    geometry_msgs::Pose drawing_point;
-    geometry_msgs::Pose path_point;
 
     // Dynamic parameters. Last arg is the default value. You can assign these from a launch file.
     nh.param<std::string>("move_group", movegroup_name, PLANNING_GROUP);
@@ -88,35 +73,29 @@ int main (int argc, char **argv) {
     ROS_INFO("End effector link: %s", move_group.getEndEffectorLink().c_str());
     //ROS_INFO("Pose Reference Frame: %s", move_group.getPoseReferenceFrame().c_str());
 
-    string line;
     bool init = false;
     double x, y, z, fraction;
     MoveItErrorCode success_plan = MoveItErrorCode::FAILURE, motion_done = MoveItErrorCode::FAILURE;
     
     // initialization before start drawing
-    //while (ros::ok() && !init){      
-        ros::Duration(5).sleep(); // wait for 2 sec
-        
-        ROS_INFO("Sleeping 5 seconds before starting ... ");
+    // ros::Duration(5).sleep(); // wait for 2 sec
+    // ROS_INFO("Sleeping 5 seconds before starting ... ");
 
-        // set all the joint values to the init joint position
-        move_group.setStartStateToCurrentState();
-        move_group.setJointValueTarget("iiwa_joint_1", 0.0);
-        move_group.setJointValueTarget("iiwa_joint_2", 0.435332);
-        move_group.setJointValueTarget("iiwa_joint_3", 0.0);
-        move_group.setJointValueTarget("iiwa_joint_4", -1.91986);
-        move_group.setJointValueTarget("iiwa_joint_5", 0.0);
-        move_group.setJointValueTarget("iiwa_joint_6", -0.785399);
-        move_group.setJointValueTarget("iiwa_joint_7", -1.57);
-        success_plan = move_group.plan(my_plan);
-        if (success_plan == MoveItErrorCode::SUCCESS) {
-            motion_done = move_group.execute(my_plan);
-            
-        }
-        ROS_INFO("Moved to the initial position");
-        ROS_INFO("Sleeping 3 seconds before starting ... ");
-        ros::Duration(3).sleep(); // wait for 3 sec
-    //}
+    // set all the joint values to the init joint position
+    move_group.setStartStateToCurrentState();
+    move_group.setJointValueTarget("iiwa_joint_1", 0.0);
+    move_group.setJointValueTarget("iiwa_joint_2", 0.435332);
+    move_group.setJointValueTarget("iiwa_joint_3", 0.0);
+    move_group.setJointValueTarget("iiwa_joint_4", -1.91986);
+    move_group.setJointValueTarget("iiwa_joint_5", 0.0);
+    move_group.setJointValueTarget("iiwa_joint_6", -0.785399);
+    move_group.setJointValueTarget("iiwa_joint_7", -1.57);
+    success_plan = move_group.plan(my_plan);
+    if (success_plan == MoveItErrorCode::SUCCESS) {
+        motion_done = move_group.execute(my_plan);
+        
+    }
+    ROS_INFO("Moved to the initial position");
 
     cerr<<"Stopping spinner..."<<endl;
     spinner.stop();
