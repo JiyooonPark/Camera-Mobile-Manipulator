@@ -325,12 +325,11 @@
     </gui>
 
     <actor name="actor">
+      <pose frame=''>3 3 0 0 -0 0</pose>
+      <scale>1 1 1</scale>
       <skin>
-        <filename>walk.dae</filename>
+        <filename>stand.dae</filename>
       </skin>
-      <animation name="animation">
-        <filename>moonwalk.dae</filename>
-      </animation>
     </actor>
   </world>
 </sdf>
