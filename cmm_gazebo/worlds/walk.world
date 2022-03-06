@@ -5,6 +5,9 @@
     <include>
       <uri>model://sun</uri>
     </include>
+        <include>
+      <uri>model://ground_plane</uri>
+    </include>
     <actor name="actor">
       <skin>
         <filename>walk.dae</filename>

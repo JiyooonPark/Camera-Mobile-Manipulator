@@ -3,7 +3,7 @@
   <arg name="paused" default="false"/>
   <arg name="use_sim_time" default="true"/>
   <arg name="joystick" default="false" />
-  <arg name="world_name" default="$(find cmm)/worlds/cafe.world" />
+  <arg name="world_name" default="$(find cmm_gazebo)/worlds/one_room_standing.world" />
 
   <rosparam file="$(find ridgeback_iiwa_gazebo)/config/gazebo_controller.yaml" command="load"/>
 
@@ -14,7 +14,13 @@
     <arg name="use_sim_time" value="$(arg use_sim_time)"/>
     <arg name="world_name" value="$(arg world_name)" />
   </include>
-
+ <!-- Control Mode -->
+  <arg name="tool_name" default="tool"/> <!-- Name of the tool we are going to use -->
+  <param name="/iiwa/publishJointStates" type="boolean" value="true" /> <!--publish joint states (avoid joint_state_controller)-->
+  <param name="/iiwa/toolName" type="string" value="$(arg tool_name)" /> <!--Sunrise tool-->
+  <arg name="joint_position_topic" default="/iiwa/state/JointPosition"/>
+  <arg name="cartesian_position_topic" default="/iiwa/state/CartesianPose"/>
+  
   <!-- send robot urdf to param server -->
   <include file="$(find ridgeback_iiwa_description)/launch/ridgeback_iiwa_upload.launch" />
 
@@ -29,5 +35,7 @@
   <include file="$(find ridgeback_iiwa_gazebo)/launch/ridgeback_iiwa_controller.launch">
     <arg name="joystick" value="$(arg joystick)" />
   </include>
+
+  
 
 </launch>

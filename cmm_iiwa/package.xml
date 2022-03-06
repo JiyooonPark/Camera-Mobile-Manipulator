@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>cmm_iiwa</name>
+  <version>0.0.0</version>
+  <description>The cmm_iiwa package</description>
+
+  <maintainer email="jypark.jiyoon@gmail.com">Jiyoon Park</maintainer>
+
+  <license>BSD</license>
+
+  <exec_depend>moveit_core</exec_depend>
+  <exec_depend>moveit_ros_planning_interface</exec_depend>
+  <exec_depend>moveit_ros_planning</exec_depend>
+  <exec_depend>moveit_visual_tools</exec_depend>
+  
+  <build_depend>iiwa_ros</build_depend>
+  <exec_depend>iiwa_ros</exec_depend>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  
+</package>
