@@ -1,6 +1,8 @@
 #include "iiwa_ros/iiwa_ros.hpp"
-#include "ros/ros.h"
-#include "std_msgs/String.h"
+#include <iiwa_ros/state/cartesian_pose.hpp>
+#include <iiwa_ros/service/control_mode.hpp>
+#include <iiwa_ros/conversions.hpp>
+
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 #include <moveit_msgs/DisplayTrajectory.h>
@@ -25,12 +27,6 @@ static const std::string EE_LINK = "iiwa_link_ee";
 
 bool sim;
 double PI = 3.14;
-
-void pan1(const std_msgs::String::ConstPtr& msg)
-{
-  ROS_INFO("I heard: [%s]", msg->data.c_str());
-}
-
 
 int main (int argc, char **argv) {
     // Initialize ROS
@@ -75,19 +71,14 @@ int main (int argc, char **argv) {
     
     double positions[3] = {0.1, -0.3, 0.5};
 
-    double pan1_up[] = {0.7, 0, 1.4, PI/4*3, 0, -PI/2};
-    double pan1_down[] = {0.7, 0, 0.8, PI/4, 0, -PI/2};
-    // double pan1[2][6] = {{0.5, 0.3, 1.5, PI/2, PI/6, -PI/2}, {0.7, 0, 0.8, PI/4, 0, -PI/2}};
-    double pan1[5][6] = {
-                        // {0.45, 0.5, 1.5, PI/2, PI/3.8, -PI/2}, 
-                        // // {0.5, 0.4, 1.3, PI/2, PI/7, -PI/2},
-                        // // {0.4, 0, 1.5, PI/2, 0, -PI/2},
-                        // // {0.5, -0.4, 1.3, PI/2, -PI/7, -PI/2},
-                        // {0.45, -0.5, 1.5, PI/2, -PI/3.8, -PI/2}
-                        {0.6, 0, 1.3, PI/2, 0, -PI/2},
-                        {-0.6, 0, 1.3, -PI/2, 0, PI/2},
-                        };
-    
+    double pan1[3][6] = {{0.7, 0, 1.5, PI/5*3, 0, -PI/2},{0.65, 0, 1.3, PI/2, 0, -PI/2}, {0.8, 0, 0.8, PI/4, 0, -PI/2}};
+    // {-0.15, 0, 1.6, PI/2, 0, -PI/2};
+    double pan2[3][6] = {{0.45, 0.5, 1.5, PI/2, PI/3.5, -PI/2},{-0.15, 0, 1.6, PI/2, 0, -PI/2},{0.45, -0.5, 1.5, PI/2, -PI/3.5, -PI/2}};
+
+    double motion[2][6] = {{0.6, 0, 1.3-0.5, PI/2, 0, -PI/2},{-0.6, 0, 1.3-0.5, -PI/2, 0, PI/2}};
+    // {0, 0, 1.9-0.7, 0, 0, 0}, 
+    // double tilt[][]={};
+    int motion_len = 2;
     tf2::Quaternion q;
     double rotz, roty, rotx;
     rotx = PI/2- 0.3;
@@ -95,11 +86,33 @@ int main (int argc, char **argv) {
     rotz = 0;
     int i = 0;
 
+
+    double x, y, z, fraction;
+
+    moveit_msgs::RobotTrajectory trajectory;
+    const double jump_threshold = 0.0; // 0.0
+    const double eef_step = 0.001; // 0.001
+
+    // for Cartesian Impedance Control
+    iiwa_ros::state::CartesianPose iiwa_pose_state;
+    iiwa_ros::service::ControlModeService iiwa_control_mode;
+
+    // Low stiffness only along Z.
+    iiwa_msgs::CartesianQuantity cartesian_stiffness = iiwa_ros::conversions::CartesianQuantityFromFloat(1500,1500,350,300,300,300);
+    iiwa_msgs::CartesianQuantity cartesian_damping = iiwa_ros::conversions::CartesianQuantityFromFloat(0.7);
+
+
+    iiwa_pose_state.init("iiwa");
+    iiwa_control_mode.init("iiwa");
+
+    iiwa_control_mode.setCartesianImpedanceMode(cartesian_stiffness, cartesian_damping);
+    iiwa_control_mode.setPositionControlMode();
+
     while (ros::ok()){
 
         command_cartesian_position = move_group.getCurrentPose(ee_link);  
-        command_cartesian_position.pose.position.x =0.66; 
-        command_cartesian_position.pose.position.z =1.1;
+        // command_cartesian_position.pose.position.x =0.66; 
+        // command_cartesian_position.pose.position.z =1.1;
         // cerr<<command_cartesian_position<<endl;
         // command_cartesian_position.pose.position.y = positions[i]; 
         // command_cartesian_position.pose.position.z += positions[i]; 
@@ -108,20 +121,20 @@ int main (int argc, char **argv) {
         // command_cartesian_position.pose.position.y += direction * -0.5; 
         // command_cartesian_position.pose.position.z += direction * 0.1; 
 
-        // command_cartesian_position.pose.position.x = pan1[i][0]; 
-        // command_cartesian_position.pose.position.y = pan1[i][1]; 
-        // command_cartesian_position.pose.position.z = pan1[i][2]; 
+        command_cartesian_position.pose.position.x = motion[i][0]; 
+        command_cartesian_position.pose.position.y = motion[i][1]; 
+        command_cartesian_position.pose.position.z = motion[i][2]; 
 
 
-        // rotx = pan1[i][3]; 
-        // roty = pan1[i][4]; 
-        // rotz = pan1[i][5]; 
+        rotx = motion[i][3]; 
+        roty = motion[i][4]; 
+        rotz = motion[i][5]; 
 
         cerr<<rotx<<endl;
 
-        rotx += 0.6 * direction; 
-        roty = 0; 
-        rotz = -PI/2; 
+        // rotx += 0.6 * direction; 
+        // roty = 0; 
+        // rotz = -PI/2; 
 
         // if (rotx >= PI/2 + 0.5){
         //     direction *= -1;
@@ -138,11 +151,18 @@ int main (int argc, char **argv) {
         command_cartesian_position.pose.orientation.z = q.z();
         command_cartesian_position.pose.orientation.w = q.w();
 
+        linear_path.push_back(command_cartesian_position.pose);
+
         move_group.setStartStateToCurrentState();
         move_group.setPoseTarget(command_cartesian_position, ee_link);
+
+        linear_path.push_back(command_cartesian_position.pose);
+        fraction = move_group.computeCartesianPath(linear_path, eef_step, jump_threshold, trajectory); // loosen the eef_step as moving backward does not need precision
+        my_plan.trajectory_ = trajectory;
+
         success_plan = move_group.plan(my_plan);
         i++;
-        if (i == 6){
+        if (i == motion_len){
             i = 0;
         }
         if (success_plan == MoveItErrorCode::SUCCESS) {
@@ -153,30 +173,6 @@ int main (int argc, char **argv) {
             // loop_rate_->sleep(); // Sleep for some millisecond. The while loop will run every 10 seconds in this example.
         }
     
-        // geometry_msgs::Pose target_pose3 = move_group.getCurrentPose().pose;
-
-        // std::vector<geometry_msgs::Pose> waypoints;
-        // waypoints.push_back(target_pose3);
-
-        // target_pose3.position.z -= 0.2;
-        // waypoints.push_back(target_pose3);  // down
-
-        // target_pose3.position.y -= 0.2;
-        // waypoints.push_back(target_pose3);  // right
-
-        // target_pose3.position.z += 0.2;
-        // target_pose3.position.y += 0.2;
-        // target_pose3.position.x -= 0.2;
-        // waypoints.push_back(target_pose3);  // up and left
-
-        // move_group.setMaxVelocityScalingFactor(0.1);
-
-        // moveit_msgs::RobotTrajectory trajectory;
-        // const double jump_threshold = 0.0;
-        // const double eef_step = 0.01;
-        // double fraction = move_group.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
-        // ROS_INFO_NAMED("tutorial", "Visualizing plan 4 (Cartesian path) (%.2f%% acheived)", fraction * 100.0);
-        // move_group.execute(waypoints);
     }
 
     cerr<<"Stopping spinner..."<<endl;
