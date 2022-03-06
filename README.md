@@ -42,3 +42,9 @@ Gazebo person
 - move custom darknet to cmm_darknet
 - make ridgebcak follow person 
 - 
+
+## Launch
+    roslaunch cmm_gazebo ridgeback_iiwa_gazebo.launch 
+    roslaunch cmm_viz mobile_manipulation_interactive_demo.launch 
+    roslaunch darknet_ros darknet_ros.launch 
+    rosrun cmm_darknet bounding_box_subscriber.py 

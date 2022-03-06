@@ -20,9 +20,9 @@ add_executable(init_pose src/init_pose.cpp)
 add_dependencies(init_pose iiwa_msgs_generate_messages_cpp)
 target_link_libraries(init_pose ${catkin_LIBRARIES})
 
-add_executable(traj1 src/traj1.cpp)
-add_dependencies(traj1 iiwa_msgs_generate_messages_cpp)
-target_link_libraries(traj1 ${catkin_LIBRARIES})
+add_executable(moveit_camera src/moveit_camera.cpp)
+add_dependencies(moveit_camera iiwa_msgs_generate_messages_cpp)
+target_link_libraries(moveit_camera ${catkin_LIBRARIES})
 
 add_executable(updown src/updown_moveit.cpp)
 add_dependencies(updown iiwa_msgs_generate_messages_cpp)
