@@ -26,19 +26,24 @@ class Ridgeback:
             x = float(x)
             size = float(size)
 
-            if x > 0.6:
-                self.next_cmd_vel.angular.z = -0.15
-            elif 0.6 >= x >= 0.4:
-                self.next_cmd_vel.angular.z = 0
+            # if x > 0.6:
+            #     self.next_cmd_vel.angular.z = -0.07
+            # elif 0.6 >= x >= 0.4:
+            #     self.next_cmd_vel.angular.z = 0
+            # else:
+            #     self.next_cmd_vel.angular.z = 0.07
+
+            if x > 0.5:
+                self.next_cmd_vel.angular.z = -0.4*abs(0.5-x)
             else:
-                self.next_cmd_vel.angular.z = 0.15
+                self.next_cmd_vel.angular.z = 0.4*abs(0.5-x)
               
-            if size>0.6:
-                self.next_cmd_vel.linear.x = -0.15
-            elif 0.6>=size>=0.4:
+            if size>0.3:
+                self.next_cmd_vel.linear.x = -0.05
+            elif 0.3>=size>=0.2:
                 self.next_cmd_vel.linear.x = 0
             else:
-                self.next_cmd_vel.linear.x = 0.15
+                self.next_cmd_vel.linear.x = 0.05
         
         else:
             self.not_found+=1

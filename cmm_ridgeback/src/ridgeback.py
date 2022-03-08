@@ -76,7 +76,6 @@ class Ridgeback:
         self.move_relative(float(r_goal[0][0]), float(r_goal[1][0]), duration=10)
 
     def move_relative(self, x, y, duration=5):
-        
         print("moving to :", x, y)
         publisher = rospy.Publisher('cmd_vel', Twist, queue_size=1)
 
@@ -94,7 +93,7 @@ class Ridgeback:
     def fixed_goal(self, goal_x, goal_y, duration=5):
 
         self.publish_state('0')
-        # print(f'Executing ridgeback drawing #{self.state}')
+        print(f'Executing ridgeback drawing #{self.state}')
         cmd = Twist()
 
         while not self.reached:
@@ -133,9 +132,9 @@ class Ridgeback:
         for i in range(len(angles)):
             while self.iiwa_state != '0':
                 rospy.sleep(1)
-            # print(f'IIWA done executing #{self.iiwa_state}')
+            print(f'IIWA done executing #{self.iiwa_state}')
 
-            # print(f'i: {i}, x: {path[i][0]}, y: {path[i][1]}')
+            print(f'i: {i}, x: {path[i][0]}, y: {path[i][1]}')
 
             self.fixed_rotate(0)
 
@@ -185,6 +184,19 @@ class Ridgeback:
             if abs(self.yaw*180/math.pi-real_target)<1:
                 break
 
+    def rotate_relative( self,duration=3):
+        print("rotate")
+        publisher = rospy.Publisher('cmd_vel', Twist, queue_size=1)
+
+        cmd = Twist()
+        cmd.angular.z = 0.05
+
+        rospy.sleep(1)
+
+        seconds = time.time()
+        while time.time() - seconds < duration:
+            publisher.publish(cmd)
+
     def publish_trajectory(self):
         
         self.path_angle, self.iiwa_range_list, self.path_x, self.path_y = run_algorithm()
@@ -229,6 +241,6 @@ if __name__ == '__main__':
     Rid = Ridgeback()
     rospy.sleep(2)
     # Rid.publish_trajectory()
-    Rid.fixed_rotate(0)
-    Rid.move_relative(1,0)
+    # Rid.rotate_relative()
+    Rid.move_relative(0.1, 0)
     # Rid.follow_trajectory(list(zip(Rid.path_x, Rid.path_y)), Rid.path_angle)
