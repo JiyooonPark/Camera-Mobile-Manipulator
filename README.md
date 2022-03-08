@@ -48,3 +48,5 @@ Gazebo person
     roslaunch cmm_viz mobile_manipulation_interactive_demo.launch 
     roslaunch darknet_ros darknet_ros.launch 
     rosrun cmm_darknet bounding_box_subscriber.py 
+
+    roslaunch realsense2_camera rs_camera.launch

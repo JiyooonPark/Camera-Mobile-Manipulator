@@ -16,9 +16,9 @@ catkin_package()
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_executable(init_pose src/init_pose.cpp)
-add_dependencies(init_pose iiwa_msgs_generate_messages_cpp)
-target_link_libraries(init_pose ${catkin_LIBRARIES})
+add_executable(cmm_init_pose src/init_pose.cpp)
+add_dependencies(cmm_init_pose iiwa_msgs_generate_messages_cpp)
+target_link_libraries(cmm_init_pose ${catkin_LIBRARIES})
 
 add_executable(moveit_camera src/moveit_camera.cpp)
 add_dependencies(moveit_camera iiwa_msgs_generate_messages_cpp)

@@ -26,7 +26,7 @@ using moveit::planning_interface::MoveItErrorCode;
 static const std::string PLANNING_GROUP = "manipulator";
 static const std::string EE_LINK = "iiwa_link_ee";
 static const std::string PLANNER_ID = "RRTConnectkConfigDefault";  
-static const std::string REFERENCE_FRAME = "arm_mount_link";
+static const std::string REFERENCE_FRAME = "iiwa_link_0";
 
 bool sim;
 
