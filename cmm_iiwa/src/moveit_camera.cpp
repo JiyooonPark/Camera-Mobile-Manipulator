@@ -17,7 +17,7 @@
 #include <vector>
 #include <tf2/LinearMath/Quaternion.h>
 
-#define TXT_FILE "/input/tilt_sideways.txt"
+#define TXT_FILE "/input/test.txt"
 
 using namespace std;
 using moveit::planning_interface::MoveItErrorCode;
