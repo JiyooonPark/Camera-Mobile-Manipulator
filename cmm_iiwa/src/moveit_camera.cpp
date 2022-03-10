@@ -14,6 +14,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include "std_msgs/String.h"
 #include <vector>
 #include <tf2/LinearMath/Quaternion.h>
 
@@ -27,7 +28,7 @@ static const std::string PLANNING_GROUP = "manipulator";
 static const std::string EE_LINK = "iiwa_link_ee";
 static const std::string PLANNER_ID = "RRTConnectkConfigDefault";  
 static const std::string REFERENCE_FRAME = "iiwa_link_0";
-
+std::string iiwa_time = "";
 bool sim;
 
 vector<string> split(string input, char delimiter){
@@ -40,6 +41,10 @@ vector<string> split(string input, char delimiter){
     }
     return ans;
 }
+void chatterCallback(const std_msgs::String::ConstPtr& msg)
+{
+  iiwa_time = msg->data.c_str();
+}
 
 int main (int argc, char **argv) {
 
@@ -51,7 +56,7 @@ int main (int argc, char **argv) {
     // ROS spinner.
     ros::AsyncSpinner spinner(1);
     spinner.start();
-    
+    // ros::Subscriber sub = nh.subscribe("/cmm/turn", 1000, chatterCallback);
     // for Cartesian Impedance Control
     iiwa_ros::state::CartesianPose iiwa_pose_state;
     iiwa_ros::service::ControlModeService iiwa_control_mode;
@@ -136,7 +141,9 @@ int main (int argc, char **argv) {
     int stroke_num = 0;
 
     while(ros::ok() && getline(txt, line) && init){
-
+        // if (iiwa_time.compare("No")){
+        //     continue;
+        // }
         if(line == "End"){
             stroke_num++;
 

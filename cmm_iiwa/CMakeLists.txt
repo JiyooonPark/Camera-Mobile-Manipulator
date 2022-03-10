@@ -35,3 +35,7 @@ target_link_libraries(end_effector ${catkin_LIBRARIES})
 add_executable(filming_methods src/filming_methods.cpp)
 add_dependencies(filming_methods iiwa_msgs_generate_messages_cpp)
 target_link_libraries(filming_methods ${catkin_LIBRARIES})
+
+add_executable(no_moveit_camera src/no_moveit_camera.cpp)
+add_dependencies(no_moveit_camera iiwa_msgs_generate_messages_cpp)
+target_link_libraries(no_moveit_camera ${catkin_LIBRARIES})
