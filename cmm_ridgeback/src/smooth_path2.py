@@ -18,6 +18,9 @@ class Ridgeback:
         self.not_found = 0
         self.start_time = time.time()
         self.turn = "rid"
+        self.x_list = [0.6, 0.55, 0.45, 0.4]
+        self.size_list = [0.85, 0.45, 0.3, 0.25, 0.15]
+        self.cmd = []
     def callback_turn(self, msg):
         self.turn = msg.data
         # print(self.turn)
@@ -38,26 +41,26 @@ class Ridgeback:
                 size = float(size)
 
 
-                if x > 0.6:
+                if x > self.x_list[0]:
                     self.next_cmd_vel.angular.z = -0.9*abs(0.5-x)
-                elif 0.6 >= x > 0.55:
+                elif self.x_list[0] >= x > self.x_list[1]:
                     self.next_cmd_vel.angular.z = -0.3*abs(0.5-x)
-                elif 0.55 >= x > 0.45:
+                elif self.x_list[1] >= x > self.x_list[2]:
                     self.next_cmd_vel.angular.z = 0
-                elif 0.45 >= x > 0.4:
+                elif self.x_list[2] >= x > self.x_list[3]:
                     self.next_cmd_vel.angular.z = 0.3*abs(0.5-x)
                 else:
                     self.next_cmd_vel.angular.z = 0.9*abs(0.5-x)
                 
-                if size>=0.85:
+                if size>=self.size_list[0]:
                     return
-                elif 0.85>size>0.45:
+                elif self.size_list[0]>size>self.size_list[1]:
                     self.next_cmd_vel.linear.x = -0.2*(1-size)
-                elif 0.45>=size>=0.3:
+                elif self.size_list[1]>=size>=self.size_list[2]:
                     self.next_cmd_vel.linear.x = -0.1*(1-size)
-                elif 0.3>=size>=0.25:
+                elif self.size_list[2]>=size>=self.size_list[3]:
                     self.next_cmd_vel.linear.x = 0
-                elif 0.25>=size>=0.15:
+                elif self.size_list[3]>=size>=self.size_list[4]:
                     self.next_cmd_vel.linear.x = 0.1*(1-size)
                 else:
                     self.next_cmd_vel.linear.x = 0.2*(1-size)
@@ -67,10 +70,25 @@ class Ridgeback:
 
                 if self.not_found == 1:
                     self.next_cmd_vel.angular.z *= 2
+        for i in range(self.smooth_movement(self.cmd[-1], self.next_cmd_vel)):
+            self.publisher_cmd_vel.publish(self.next_cmd_vel)
+        self.cmd.append(self.next_cmd_vel)
+        
+            # print(self.next_cmd_vel)
 
-        self.publisher_cmd_vel.publish(self.next_cmd_vel)
-        print(self.next_cmd_vel)
-
+    def smooth_movement(self, before, after):
+        if self.bad(before, after):
+            rospy.loginfo("expanded range to: ", range(before, after, 0.01))
+            return range(before, after, 0.01)
+        else:
+            return [before, after]
+    def bad(self, before, after):
+        if before*after <= 0:
+            return True
+        elif abs(before-after) > 0.2:
+            return True
+        else:
+            return False
     def move(self):
         while True:
             self.publisher_cmd_vel.publish(self.next_cmd_vel)
