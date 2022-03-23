@@ -75,7 +75,7 @@ class Ridgeback:
 
         self.move_relative(float(r_goal[0][0]), float(r_goal[1][0]), duration=10)
 
-    def move_relative(self, x, y, duration=5):
+    def move_relative(self, x, y, duration=20):
         print("moving to :", x, y)
         publisher = rospy.Publisher('cmd_vel', Twist, queue_size=1)
 
@@ -84,7 +84,7 @@ class Ridgeback:
         cmd.linear.y = y/duration
         cmd.linear.z = 0
 
-        rospy.sleep(1)
+        # rospy.sleep(1)
 
         seconds = time.time()
         while time.time() - seconds < duration:
@@ -242,5 +242,7 @@ if __name__ == '__main__':
     rospy.sleep(2)
     # Rid.publish_trajectory()
     # Rid.rotate_relative()
-    Rid.move_relative(0.1, 0)
+    for i in range(3):
+        Rid.move_relative(0, 0.3)
+        Rid.move_relative(0, -0.3)
     # Rid.follow_trajectory(list(zip(Rid.path_x, Rid.path_y)), Rid.path_angle)
